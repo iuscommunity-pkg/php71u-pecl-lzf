@@ -53,8 +53,6 @@ slight speed cost.
 sed -e '/name="lib/d' -i package.xml
 rm -r %{pecl_name}-%{version}/lib/
 
-[ -f package2.xml ] || %{__mv} package.xml package2.xml
-%{__mv} package2.xml %{pecl_name}-%{version}/%{pecl_name}.xml
 
 %build
 cd %{pecl_name}-%{version}
@@ -73,8 +71,7 @@ cd %{pecl_name}-%{version}
 extension=lzf.so
 EOF
 
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -p -m 644 %{pecl_name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{pecl_name}.xml
 
 
 %check
@@ -93,12 +90,13 @@ NO_INTERACTION=1 \
 %doc %{pecl_name}-%{version}/CREDITS
 %config(noreplace) %{_sysconfdir}/php.d/%{ini_name}
 %{php_extdir}/lzf.so
-%{pecl_xmldir}/%{name}.xml
+%{pecl_xmldir}/%{pecl_name}.xml
 
 %changelog
 * Mon Jan 29 2018 Carl George <carl@george.computer> - 1.6.6-1.ius
 - Latest upstream
 - Port from Fedora to IUS
+- Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 
 * Tue Oct 03 2017 Remi Collet <remi@fedoraproject.org> - 1.6.5-7
 - rebuild for https://fedoraproject.org/wiki/Changes/php72
