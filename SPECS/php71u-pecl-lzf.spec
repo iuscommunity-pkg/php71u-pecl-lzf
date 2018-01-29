@@ -58,6 +58,8 @@ slight speed cost.
 sed -e '/name="lib/d' -i package.xml
 rm -r %{pecl_name}-%{version}/lib/
 
+sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml
+
 mv %{pecl_name}-%{version} NTS
 %if %{with zts}
 cp -pr NTS ZTS
@@ -96,6 +98,10 @@ install -D -p -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{pecl_name}.xml
 
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -D -p -m 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 pushd NTS
@@ -130,7 +136,8 @@ fi
 
 
 %files
-%doc %{pecl_name}-%{version}/CREDITS
+%license NTS/LICENSE
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{pecl_name}.xml
 
 %{php_extdir}/lzf.so
@@ -149,6 +156,7 @@ fi
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 - Re-add scriptlets (file triggers not yet available in EL)
 - Enable ZTS
+- Fix license and documentation handling
 
 * Tue Oct 03 2017 Remi Collet <remi@fedoraproject.org> - 1.6.5-7
 - rebuild for https://fedoraproject.org/wiki/Changes/php72
