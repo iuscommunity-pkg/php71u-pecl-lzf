@@ -17,6 +17,9 @@ BuildRequires:	liblzf-devel
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 
+Requires(post): pecl >= 1.10.0
+Requires(postun): pecl >= 1.10.0
+
 # provide the stock name
 Provides:	php-pecl-lzf = %{version}
 Provides:	php-pecl-lzf%{?_isa} = %{version}
@@ -86,6 +89,16 @@ NO_INTERACTION=1 \
     -d extension=lzf.so \
 
 
+%post
+%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+
+
+%postun
+if [ $1 -eq 0 ]; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+
+
 %files
 %doc %{pecl_name}-%{version}/CREDITS
 %config(noreplace) %{_sysconfdir}/php.d/%{ini_name}
@@ -97,6 +110,7 @@ NO_INTERACTION=1 \
 - Latest upstream
 - Port from Fedora to IUS
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
+- Re-add scriptlets (file triggers not yet available in EL)
 
 * Tue Oct 03 2017 Remi Collet <remi@fedoraproject.org> - 1.6.5-7
 - rebuild for https://fedoraproject.org/wiki/Changes/php72
