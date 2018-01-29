@@ -1,22 +1,44 @@
 %global pecl_name LZF
 %global ini_name  40-lzf.ini
+%global php       php71u
 
-Name:		php-pecl-lzf
+Name:		%{php}-pecl-lzf
 Version:	1.6.6
-Release:	1%{?dist}
+Release:	1.ius%{?dist}
 Summary:	Extension to handle LZF de/compression
 Group:		Development/Languages
 License:	PHP
 URL:		http://pecl.php.net/package/%{pecl_name}
 Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRequires:	php-devel
-BuildRequires:	php-pear >= 1:1.4.0
+BuildRequires:	%{php}-devel
+BuildRequires:	pecl >= 1.10.0
 BuildRequires:	liblzf-devel
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 
+# provide the stock name
+Provides:	php-pecl-lzf = %{version}
+Provides:	php-pecl-lzf%{?_isa} = %{version}
+
+# provide the stock and IUS names without pecl
+Provides:	php-lzf = %{version}
+Provides:	php-lzf%{?_isa} = %{version}
+Provides:	%{php}-lzf = %{version}
+Provides:	%{php}-lzf%{?_isa} = %{version}
+
+# provide the stock and IUS names in pecl() format
 Provides:	php-pecl(%{pecl_name}) = %{version}
+Provides:	php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:	%{php}-pecl(%{pecl_name}) = %{version}
+Provides:	%{php}-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# conflict with the stock name
+Conflicts:	php-pecl-lzf < %{version}
+
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
 
 
 %description
@@ -74,8 +96,9 @@ NO_INTERACTION=1 \
 %{pecl_xmldir}/%{name}.xml
 
 %changelog
-* Mon Jan 29 2018 Carl George <carl@george.computer> - 1.6.6-1
+* Mon Jan 29 2018 Carl George <carl@george.computer> - 1.6.6-1.ius
 - Latest upstream
+- Port from Fedora to IUS
 
 * Tue Oct 03 2017 Remi Collet <remi@fedoraproject.org> - 1.6.5-7
 - rebuild for https://fedoraproject.org/wiki/Changes/php72
