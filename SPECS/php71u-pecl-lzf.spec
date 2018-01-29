@@ -13,7 +13,11 @@ License:	PHP
 URL:		http://pecl.php.net/package/%{pecl_name}
 Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+BuildRequires:  %{php}-cli
+BuildRequires:  %{php}-common
 BuildRequires:	%{php}-devel
+BuildRequires:  %{php}-process
+BuildRequires:  %{php}-xml
 BuildRequires:	pecl >= 1.10.0
 BuildRequires:	liblzf-devel
 Requires:	php(zend-abi) = %{php_zend_api}
@@ -157,6 +161,7 @@ fi
 - Re-add scriptlets (file triggers not yet available in EL)
 - Enable ZTS
 - Fix license and documentation handling
+- Explicitly require pecl (pear1u) dependencies from php71u to avoid conflicts
 
 * Tue Oct 03 2017 Remi Collet <remi@fedoraproject.org> - 1.6.5-7
 - rebuild for https://fedoraproject.org/wiki/Changes/php72
