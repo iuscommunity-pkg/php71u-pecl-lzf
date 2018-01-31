@@ -6,25 +6,25 @@
 
 Name:           %{php}-pecl-lzf
 Version:        1.6.6
-Release:        1.ius%{?dist}
+Release:        2.ius%{?dist}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
 URL:            https://pecl.php.net/package/%{pecl_name}
 Source0:        https://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+BuildRequires:  %{php}-devel
+BuildRequires:  liblzf-devel
+
+BuildRequires:  pear1u
+# explicitly require pear dependencies to avoid conflicts
 BuildRequires:  %{php}-cli
 BuildRequires:  %{php}-common
-BuildRequires:  %{php}-devel
 BuildRequires:  %{php}-process
 BuildRequires:  %{php}-xml
-BuildRequires:  pecl >= 1.10.0
-BuildRequires:  liblzf-devel
+
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-
-Requires(post): pecl >= 1.10.0
-Requires(postun): pecl >= 1.10.0
 
 # provide the stock name
 Provides:       php-pecl-lzf = %{version}
@@ -130,12 +130,20 @@ popd
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+%triggerin -- pear1u
+if [ -x %{__pecl} ]; then
+    %{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+fi
+
+
+%posttrans
+if [ -x %{__pecl} ]; then
+    %{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+fi
 
 
 %postun
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -a -x %{__pecl} ]; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -155,6 +163,9 @@ fi
 
 
 %changelog
+* Wed Jan 31 2018 Carl George <carl@george.computer> - 1.6.6-2.ius
+- Remove pear requirement and update scriptlets (adapted from remirepo)
+
 * Mon Jan 29 2018 Carl George <carl@george.computer> - 1.6.6-1.ius
 - Latest upstream
 - Port from Fedora to IUS
