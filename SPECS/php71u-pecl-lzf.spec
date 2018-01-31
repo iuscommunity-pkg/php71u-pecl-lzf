@@ -4,46 +4,46 @@
 
 %bcond_without zts
 
-Name:		%{php}-pecl-lzf
-Version:	1.6.6
-Release:	1.ius%{?dist}
-Summary:	Extension to handle LZF de/compression
-Group:		Development/Languages
-License:	PHP
-URL:		http://pecl.php.net/package/%{pecl_name}
-Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Name:           %{php}-pecl-lzf
+Version:        1.6.6
+Release:        1.ius%{?dist}
+Summary:        Extension to handle LZF de/compression
+Group:          Development/Languages
+License:        PHP
+URL:            https://pecl.php.net/package/%{pecl_name}
+Source0:        https://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRequires:  %{php}-cli
 BuildRequires:  %{php}-common
-BuildRequires:	%{php}-devel
+BuildRequires:  %{php}-devel
 BuildRequires:  %{php}-process
 BuildRequires:  %{php}-xml
-BuildRequires:	pecl >= 1.10.0
-BuildRequires:	liblzf-devel
-Requires:	php(zend-abi) = %{php_zend_api}
-Requires:	php(api) = %{php_core_api}
+BuildRequires:  pecl >= 1.10.0
+BuildRequires:  liblzf-devel
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
 Requires(post): pecl >= 1.10.0
 Requires(postun): pecl >= 1.10.0
 
 # provide the stock name
-Provides:	php-pecl-lzf = %{version}
-Provides:	php-pecl-lzf%{?_isa} = %{version}
+Provides:       php-pecl-lzf = %{version}
+Provides:       php-pecl-lzf%{?_isa} = %{version}
 
 # provide the stock and IUS names without pecl
-Provides:	php-lzf = %{version}
-Provides:	php-lzf%{?_isa} = %{version}
-Provides:	%{php}-lzf = %{version}
-Provides:	%{php}-lzf%{?_isa} = %{version}
+Provides:       php-lzf = %{version}
+Provides:       php-lzf%{?_isa} = %{version}
+Provides:       %{php}-lzf = %{version}
+Provides:       %{php}-lzf%{?_isa} = %{version}
 
 # provide the stock and IUS names in pecl() format
-Provides:	php-pecl(%{pecl_name}) = %{version}
-Provides:	php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:	%{php}-pecl(%{pecl_name}) = %{version}
-Provides:	%{php}-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{php}-pecl(%{pecl_name}) = %{version}
+Provides:       %{php}-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # conflict with the stock name
-Conflicts:	php-pecl-lzf < %{version}
+Conflicts:      php-pecl-lzf < %{version}
 
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
@@ -56,6 +56,7 @@ library
 
 LZF is a very fast compression algorithm, ideal for saving space with a 
 slight speed cost.
+
 
 %prep
 %setup -c -q
@@ -92,11 +93,11 @@ popd
 
 
 %install
-make -C NTS install INSTALL_ROOT=%{buildroot} INSTALL="install -p"
+make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -p -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with zts}
-make -C ZTS install INSTALL_ROOT=%{buildroot} INSTALL="install -p"
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -p -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
